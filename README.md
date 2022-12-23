@@ -21,20 +21,39 @@ functions.
 
 ## Writing functions
 
-Add Typescript functions to the `src/functions` directory, one function per file. Be
-sure to export the function with `export function`.
+Add Typescript functions to the `src/functions` directory, one function per file.
+Use the type names from the 'plv8' package to define parameters and return types.
+Be sure to export the function with `export function`. This trivial example:
+
+```
+export function sample_function(event_id_param: int8): smallint {
+  return 2;
+}
+```
+
+will produce this:
+
+```
+create or replace function sample_function(event_id_param int8)
+returns smallint AS $$
+  return 2;
+$$ language plv8 security definer;
+```
 
 To define functions in a schema (other than the default "public") create a
 subdirectory in src/functions. [This example](src/functions/private/sample_send_email.ts)
 will be defined in the `private` schema.
 
-Use the type names from the 'plv8' package to define parameters and return types.
-Call plv8 functions and optionally add type definitions, for example:
+## Calling PLV8 functions
+
+Import `plv8` and use the functions that it defines. Some allow defining a type that will
+help with type checking in the Typescript compiler. For example, adding a type `Foo` when
+calling `execute` will cast the return type as `Foo[]`. For example:
 
 ```
-  const template_id = plv8.execute<{value: string}>(
-        "select value from private.keys where key = 'EMAIL_TEMPLATE_PROMOTE_ATTENDEE'"
-      )[0].value;
+const value_rows = plv8.execute<{value: string}>(
+  "select value from private.keys where key = 'EMAIL_TEMPLATE_PROMOTE_ATTENDEE'");
+// Use value_rows[0].value
 ```
 
 will cast the return value as `{value: string}[]`. More examples in the
@@ -79,3 +98,10 @@ package is using the [Google Typescript Style](https://github.com/google/gts).
 ## Testing
 
 TODO: Add example of testing the functions.
+
+## Tech details
+
+The [Typescript config](tsconfig.json) is currently using a module settings of `es2015`.
+This was found through experimentation to produce the easiest output to parse. This also
+seems to set the target to ES6, which seems to be supported by current version of PLV8.
+The PLV8 documentation doesn't mention which ECMAScript version it supports.

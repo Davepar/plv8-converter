@@ -5,7 +5,8 @@
     "outDir": "build",
     "module": "es2015",
     "moduleResolution": "node",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "sourceMap": false
   },
   "include": [
     "src/**/*.ts",

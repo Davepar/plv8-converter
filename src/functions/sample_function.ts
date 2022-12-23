@@ -1,4 +1,4 @@
-import {plv8, smallint, text, date, jsonb} from 'plv8';
+import {plv8, smallint, int8, text, date, jsonb} from 'plv8';
 
 // Rows returned from sql statements
 type EventRow = {
@@ -14,7 +14,7 @@ type UserDataRow = {
   full_name: text;
 };
 
-export function sample_function(event_id_param: bigint): smallint {
+export function sample_function(event_id_param: int8): smallint {
   // plv8: security definer
   const event_rows = plv8.execute<EventRow>(
     `select e.name as event_name, e.date_time at time zone $2 as event_date_time,
