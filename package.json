@@ -1,0 +1,19 @@
+{
+  "devDependencies": {
+    "@types/node": "^14.11.2",
+    "gts": "^3.1.1",
+    "typescript": "~4.4.0",
+    "yargs": "^17.6.2"
+  },
+  "scripts": {
+    "lint": "gts lint",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run lint",
+    "convert": "tsc && node js_to_plv8/convert.js"
+  },
+  "type": "module"
+}
